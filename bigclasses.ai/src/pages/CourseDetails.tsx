@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import CourseOverview from "@/components/home/CourseOverview";
 import Curriculum from "@/components/home/Curriculum";
 import Highlights from "@/components/home/Highlights";
-import TestimonialsSection from "@/components/home/TestimonialsSection";
+// TestimonialsSection removed
 import PlacementAssistance from "@/components/home/PlacementAssistance";
 import CTASection from "@/components/home/CTASection"; 
 import Navbar from "@/components/layout/Navbar";
@@ -17,7 +17,7 @@ const CourseDetails: React.FC = () => {
         <Highlights />
         <CourseOverview />
         <Curriculum />
-        <TestimonialsSection />
+        {/* Testimonials removed */}
         <PlacementAssistance />
         <CTASection /> 
         <Footer />

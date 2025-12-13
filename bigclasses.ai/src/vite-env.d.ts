@@ -1,8 +1,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_GA_TRACKING_ID: string
-  readonly VITE_GTM_ID: string
+  // Google Analytics removed — no runtime VITE vars required here
 }
 
 interface ImportMeta {

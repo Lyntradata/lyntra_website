@@ -1,15 +1,7 @@
 import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import {
-  Users,
-  Clock,
-  Star,
-  BookOpen,
-} from "lucide-react";
+import { Users, Clock, Star, BookOpen, ArrowRight, Play } from "lucide-react";
 
-export const courses = [
+const courses = [
   {
     id: "data-analytics",
     title: "Data Analytics",
@@ -80,7 +72,7 @@ export const courses = [
     id: "langchain",
     title: "LangChain",
     description: "Master building LLM applications with LangChain and real-world integrations.",
-    image: "/lovable-uploads/langchain.png",
+    image: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=800",
     students: "2167+",
     duration: "4 weeks",
     level: "Intermediate",
@@ -144,141 +136,156 @@ export const courses = [
   }
 ];
 
-const CoursesSection = () => {
-  const navigate = useNavigate();
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
+export default function CoursesSection() {
+  const [hoveredId, setHoveredId] = useState(null);
   const [showAllCourses, setShowAllCourses] = useState(false);
 
-  const handleViewCourse = (courseId: string) => {
-    navigate(`/${courseId}`);
+  const handleViewCourse = (courseId) => {
+    window.location.href = `/${courseId}`;
   };
 
-  const visibleCourses = showAllCourses ? courses : courses.slice(0, 8);
+  const visibleCourses = showAllCourses ? courses : courses.slice(0, 9);
 
   return (
-    <section id="courses" className="py-24 relative overflow-hidden">
-      <div className="absolute inset-0 z-0 opacity-30">
-        <div className="absolute top-40 right-10 w-72 h-72 bg-primary/5 rounded-full filter blur-3xl"></div>
-        <div className="absolute bottom-20 left-20 w-72 h-72 bg-secondary/5 rounded-full filter blur-3xl"></div>
+    <section id="courses" className="py-12 sm:py-16 lg:py-24 relative overflow-hidden bg-gradient-to-br from-orange-50 via-white to-blue-50">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40">
+        <div className="absolute top-20 -right-20 w-80 h-80 bg-orange-400 rounded-full mix-blend-multiply filter blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-40 -left-20 w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12">
-          <div className="mb-6 md:mb-0">
-            <h2 className="mb-4">
-              Featured <span className="gradient-text">Courses</span>
-            </h2>
-            <p className="text-lg text-gray-600 max-w-xl">
-              Explore our most popular AI and data science courses, designed to
-              help you master the skills that matter.
-            </p>
+      <div className="w-full px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="text-center mb-12 sm:mb-16 lg:mb-20">
+          <div className="inline-flex items-center gap-3 mb-4 sm:mb-6">
+            <div className="h-0.5 w-8 sm:w-12 bg-orange-500"></div>
+            <span className="text-orange-600 font-bold text-xs sm:text-sm uppercase tracking-widest">
+              Featured Courses
+            </span>
+            <div className="h-0.5 w-8 sm:w-12 bg-orange-500"></div>
           </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-6xl font-black mb-4 sm:mb-6 text-black">
+            Learn From The <span className="text-orange-600">Best</span>
+          </h2>
+          <p className="text-base sm:text-lg lg:text-xl text-gray-700 max-w-3xl mx-auto px-4">
+            Expertly crafted courses designed to transform your career in AI and data science
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {visibleCourses.map((course) => (
-            <Card
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          {visibleCourses.map((course, index) => (
+            <article
               key={course.id}
-              className={`overflow-hidden border border-gray-200 transition-all duration-500 flex flex-col h-full transform ${
-                hoveredId === course.id ? "shadow-2xl scale-105" : "shadow-md"
-              }`}
+              className="group relative cursor-pointer w-full"
               onMouseEnter={() => setHoveredId(course.id)}
               onMouseLeave={() => setHoveredId(null)}
+              onClick={() => handleViewCourse(course.id)}
             >
-              <div className="relative h-52 overflow-hidden">
-                <div
-                  className={`absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 opacity-0 transition-opacity duration-300 ${
-                    hoveredId === course.id ? "opacity-100" : ""
-                  }`}
-                ></div>
+              <div className="relative overflow-hidden h-72 sm:h-80 rounded-3xl w-full">
                 <img
                   src={course.image}
                   alt={course.title}
-                  className={`w-full h-full object-cover transition-transform duration-700 ${
-                    hoveredId === course.id ? "scale-110" : ""
+                  className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ${
+                    hoveredId === course.id ? 'scale-110 brightness-50' : 'scale-100 brightness-75'
                   }`}
                 />
-                <div
-                  className={`absolute bottom-0 left-0 right-0 p-4 z-20 transform transition-transform duration-300 ${
-                    hoveredId === course.id
-                      ? "translate-y-0"
-                      : "translate-y-full"
-                  }`}
-                >
-                  <Button
-                    className="w-full rounded-md"
-                    size="sm"
-                    onClick={() => handleViewCourse(course.id)}
-                  >
-                    View Course
-                  </Button>
-                </div>
-              </div>
-
-              <CardContent className="p-5 flex flex-col flex-grow">
-                <div className="flex-grow">
-                  <div className="flex items-center justify-between mb-2">
-                    <span
-                      className={`text-xs font-semibold px-2 py-1 rounded-full ${
-                        course.level === "Beginner"
-                          ? "bg-green-100 text-green-800"
-                          : course.level === "Intermediate"
-                          ? "bg-blue-100 text-blue-800"
-                          : "bg-purple-100 text-purple-800"
-                      }`}
-                    >
+                
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/30"></div>
+                
+                <div className="absolute inset-0 flex flex-col justify-between p-5 sm:p-6">
+                  <div className="flex justify-between items-start">
+                    <span className="text-5xl sm:text-6xl font-black text-white opacity-40 leading-none">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    
+                    <span className={`text-xs font-bold px-2.5 py-1 rounded ${
+                      course.level === "Beginner"
+                        ? "bg-green-500"
+                        : course.level === "Intermediate"
+                        ? "bg-blue-500"
+                        : "bg-orange-600"
+                    } text-white uppercase tracking-wide`}>
                       {course.level}
                     </span>
-                    <div className="flex items-center">
-                      <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                      <span className="text-sm font-medium ml-1">
-                        {course.rating}
-                      </span>
-                    </div>
                   </div>
-                  <h3 className="font-bold text-lg mb-2 group-hover:text-primary transition-colors">
-                    <span className="bg-gradient-to-r from-primary to-secondary bg-[length:0%_2px] hover:bg-[length:100%_2px] bg-no-repeat bg-bottom transition-all duration-500">
+
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-black text-white mb-2 leading-tight">
                       {course.title}
-                    </span>
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-4">
-                    {course.description}
-                  </p>
+                    </h3>
+                    
+                    <div className="flex items-center gap-1.5 mb-3">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${
+                            i < Math.floor(course.rating)
+                              ? 'text-orange-500 fill-orange-500'
+                              : 'text-gray-400'
+                          }`}
+                        />
+                      ))}
+                      <span className="text-white font-bold ml-1 text-xs sm:text-sm">{course.rating}</span>
+                    </div>
+
+                    <p className="text-xs sm:text-sm text-white/90 mb-3 leading-relaxed line-clamp-2">
+                      {course.description}
+                    </p>
+
+                    <div className="grid grid-cols-3 gap-2 mb-3">
+                      <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg py-1.5">
+                        <Users className="h-4 w-4 text-white mx-auto mb-0.5" />
+                        <p className="text-xs font-bold text-white">{course.students}</p>
+                        <p className="text-[10px] text-white/70">Students</p>
+                      </div>
+                      <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg py-1.5">
+                        <Clock className="h-4 w-4 text-white mx-auto mb-0.5" />
+                        <p className="text-xs font-bold text-white">{course.duration}</p>
+                        <p className="text-[10px] text-white/70">Duration</p>
+                      </div>
+                      <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg py-1.5">
+                        <BookOpen className="h-4 w-4 text-white mx-auto mb-0.5" />
+                        <p className="text-xs font-bold text-white">{course.modules}</p>
+                        <p className="text-[10px] text-white/70">Modules</p>
+                      </div>
+                    </div>
+
+                    <button
+                      className={`w-full font-bold py-2.5 text-xs sm:text-sm transition-all duration-300 flex items-center justify-center gap-2 rounded-lg ${
+                        hoveredId === course.id
+                          ? 'bg-orange-600 text-white opacity-100 translate-y-0'
+                          : 'bg-white text-black opacity-0 translate-y-2'
+                      }`}
+                    >
+                      <Play className="h-3.5 w-3.5" />
+                      Explore Course
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
                 </div>
 
-                <div className="flex items-center justify-between text-sm text-gray-500 mt-4 pt-4 border-t border-gray-100">
-                  <div className="flex items-center">
-                    <Users className="h-4 w-4 mr-1" />
-                    <span>{course.students} students</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="h-4 w-4 mr-1" />
-                    <span>{course.duration}</span>
-                  </div>
-                </div>
-                <div className="mt-3 flex items-center text-sm text-primary">
-                  <BookOpen className="h-4 w-4 mr-1" />
-                  <span>{course.modules} modules</span>
-                </div>
-              </CardContent>
-            </Card>
+                <div className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-orange-500 via-orange-600 to-blue-600 transition-all duration-300 ${
+                  hoveredId === course.id ? 'w-2' : ''
+                }`}></div>
+
+                <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-500 via-orange-600 to-blue-600 transition-all duration-300 ${
+                  hoveredId === course.id ? 'h-1.5' : ''
+                }`}></div>
+              </div>
+            </article>
           ))}
         </div>
 
-        {/* Toggle Button */}
-        <div className="mt-12 flex justify-center">
-          {!showAllCourses && (
-            <Button
-              className="border border-black text-black font-semibold shadow-md rounded-lg px-6 py-2 transition-all duration-300 bg-white hover:bg-blue-600 hover:text-white hover:border-transparent flex items-center justify-center gap-2"
+        {!showAllCourses && (
+          <div className="mt-12 sm:mt-16 lg:mt-20 flex justify-center">
+            <button
               onClick={() => setShowAllCourses(true)}
+              className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold px-6 sm:px-8 lg:px-10 py-3 sm:py-3.5 lg:py-4 text-sm sm:text-base transition-all duration-300 transform hover:scale-105 inline-flex items-center gap-2 sm:gap-3 shadow-2xl rounded-lg"
             >
-              View All Courses
-            </Button>
-          )}
-        </div>
+              View All {courses.length} Courses
+              <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
-};
-
-export default CoursesSection;
+}

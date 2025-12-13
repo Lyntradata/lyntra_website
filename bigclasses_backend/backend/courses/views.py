@@ -2,7 +2,6 @@ import logging
 import os
 import mimetypes
 import json
-import requests
 from django.http import HttpResponse, Http404, FileResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -26,7 +25,7 @@ from django.urls import reverse
 
 logger = logging.getLogger(__name__)
 
-GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxxu2LFxZeyfLSzCHTzrycwIAyEumcd0LjxdR7H2ilPDmr1-pHxVQEES0NT5tci_pWz/exec"
+
 
 class CourseListView(ListAPIView):
     queryset = Course.objects.all()
@@ -216,25 +215,8 @@ class EnrollDownloadView(View):
                     logger.error(f"Failed to send curriculum to {email}: {e}")
                     curriculum_sent = False
 
-            sheet_data = {
-                'name': name,
-                'email': email,
-                'phone': phone,
-                'extra_info': extra_info,
-                'course_slug': slug,
-                'course_title': course_title,
-                'timestamp': '',
-            }
-            try:
-                response = requests.post(
-                    GOOGLE_SHEET_WEBHOOK_URL,
-                    json=sheet_data,
-                    timeout=10
-                )
-                if response.status_code != 200:
-                    logger.warning(f"Google Sheets API error: {response.text}")
-            except requests.exceptions.RequestException as e:
-                logger.warning(f"Failed to send data to Google Sheets: {e}")
+            # Google Sheets integration removed — previously sent enrollment data to a webhook.
+            logger.debug("Google Sheets webhook removed: enrollment data not forwarded to external sheet.")
 
             try:
                 self.send_user_email(name, email, course_title)

@@ -1,576 +1,258 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, ChevronRight, Layers, Headphones, Briefcase, Award, PlayCircle, RefreshCw } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Navbar from "../layout/Navbar";
-import TestimonialsSection from "@/components/home/TestimonialsSection";
+import { Layers, Headphones, Briefcase, RefreshCw, Sparkles } from "lucide-react";
+import Navbar from "@/components/layout/Navbar";
 import PlacementAssistance from "@/components/home/PlacementAssistance";
-import CTASection from "@/components/home/CTASection";
 import Footer from "@/components/layout/Footer";
 
-// Define the feature data structure with MP4 videos for 3 features and images for Certifications
+// Define the feature data structure
 const subFeatures = [
-	{
-		id: "hands-on-projects",
-		title: "Hands-on Projects",
-		icon: <Layers className="h-6 w-6" />,
-		description:
-			"Apply your knowledge with real-world projects that build your portfolio and practical skills.",
-		benefits: [
-			"Our projects are designed based on real job roles and the skills that IT and AI companies are looking for .",
-			"Students work on practical, real-world projects that match what companies actually use.",
-			"We have a system that guides students to choose the right projects for their career goals.",
-			"All projects are created after analyzing thousands of job listings to ensure they help students get hired.",
-		],
-		detailContent:
-			"Our hands-on projects are designed to reinforce theoretical concepts through practical application. Each project simulates real-world scenarios you'll encounter in your professional career. From building machine learning models to developing full-stack applications, these projects will not only solidify your understanding but also provide valuable additions to your portfolio. Our instructors provide detailed feedback on your work, helping you identify areas for improvement and refine your approach to problem-solving.",
-		mediaType: "video",
-		videoSrc: "/images/projects.mp4",
-	},
-	{
-		id: "mentor-support",
-		title: "Mentor Support",
-		icon: <Headphones className="h-6 w-6" />,
-		description:
-			"Get guidance and support from industry experts who are dedicated to your success.",
-		benefits: [
-			"1-on-1 mentorship and  mentoring sections with industry professionals.",
-			"24/7 chat support on every class video using AI.",
-			"Automated Assignments evaluation and code feedback using AI.",
-			"Carreer Adivce and with industry professionals.",
-		],
-		detailContent:
-			"Our mentorship program connects you with experienced professionals who are passionate about helping you succeed. Through scheduled 1-on-1 sessions, you'll receive personalized guidance tailored to your learning goals and career aspirations. Mentors provide code reviews, help troubleshoot challenges, and share valuable insights from their industry experience. This direct access to expertise accelerates your learning and helps you avoid common pitfalls as you progress through your educational journey.",
-		mediaType: "video",
-		videoSrc: "/images/mentor.mp4",
-	},
-	{
-		id: "career-services",
-		title: "Career Services",
-		icon: <Briefcase className="h-6 w-6" />,
-		description:
-			"Prepare for your career with resume reviews, interview preparation, and job search strategies.",
-		benefits: [
-			"Resume and LinkedIn profile optimization to showcase your skills effectively.",
-			"Mock interviews with feedback to prepare for technical and behavioral questions.",
-			"Job search strategies, networking tips, and salary negotiation guidance.",
-			"Comprehensive support to transition smoothly from education to employment.",
-		],
-		detailContent:
-			"Our comprehensive career services are designed to bridge the gap between education and employment. We'll help you craft a compelling resume that highlights your newly acquired skills and projects. Our career coaches conduct mock interviews to prepare you for technical and behavioral questions. Additionally, we provide guidance on job search strategies, networking techniques, and salary negotiation. With our support, you'll be well-equipped to launch or advance your career in the tech industry.",
-		mediaType: "video",
-		videoSrc: "/images/services.mp4",
-	},
-	{
-		id: "certifications",
-		title: "Certifications",
-		icon: <Award className="h-6 w-6" />,
-		description:
-			"Earn industry-recognized certifications that validate your skills and enhance your credentials.",
-		benefits: [
-			"Earn industry-recognized credentials to enhance your resume.",
-			"Validate your skills with certifications aligned to employer expectations.",
-			"Access certification prep materials anytime for ongoing learning.",
-			"Gain a competitive edge with sharable digital certificates.",
-		],
-		detailContent:
-			"Our certification programs provide formal recognition of your expertise in specific domains. These credentials are designed to align with industry standards and employer expectations. Upon completing course requirements and passing the final assessment, you'll receive a digital certificate that can be shared on professional platforms like LinkedIn. Our certifications validate your knowledge and skills to potential employers, giving you a competitive edge in the job market and demonstrating your commitment to professional development.",
-		mediaType: "image",
-		imageSrc: [
-			"/images/certificate_1.webp",
-			"/images/certificate_2.webp",
-		],
-	},
+  {
+    id: "hands-on-projects",
+    title: "Hands-on Projects",
+    icon: Layers,
+    description: "Apply your knowledge with real-world projects that build your portfolio and practical skills.",
+    benefits: [
+      "Our projects are designed based on real job roles and the skills that IT and AI companies are looking for.",
+      "Students work on practical, real-world projects that match what companies actually use.",
+      "We have a system that guides students to choose the right projects for their career goals.",
+      "All projects are created after analyzing thousands of job listings to ensure they help students get hired.",
+    ],
+    detailContent: "Our hands-on projects are designed to reinforce theoretical concepts through practical application. Each project simulates real-world scenarios you'll encounter in your professional career. From building machine learning models to developing full-stack applications, these projects will not only solidify your understanding but also provide valuable additions to your portfolio.",
+    mediaType: "video",
+    imageSrc: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&h=500&fit=crop",
+    gradient: "from-orange-500 to-red-500",
+    bgPattern: "bg-orange-50"
+  },
+  {
+    id: "mentor-support",
+    title: "Mentor Support",
+    icon: Headphones,
+    description: "Get guidance and support from industry experts who are dedicated to your success.",
+    benefits: [
+      "1-on-1 mentorship and mentoring sections with industry professionals.",
+      "24/7 chat support on every class video using AI.",
+      "Automated Assignments evaluation and code feedback using AI.",
+      "Career Advice with industry professionals.",
+    ],
+    detailContent: "Our mentorship program connects you with experienced professionals who are passionate about helping you succeed. Through scheduled 1-on-1 sessions, you'll receive personalized guidance tailored to your learning goals and career aspirations. Mentors provide code reviews, help troubleshoot challenges, and share valuable insights from their industry experience.",
+    mediaType: "video",
+    imageSrc: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&h=500&fit=crop",
+    gradient: "from-blue-500 to-cyan-500",
+    bgPattern: "bg-blue-50"
+  },
+  {
+    id: "career-services",
+    title: "Career Services",
+    icon: Briefcase,
+    description: "Prepare for your career with resume reviews, interview preparation, and job search strategies.",
+    benefits: [
+      "Resume and LinkedIn profile optimization to showcase your skills effectively.",
+      "Mock interviews with feedback to prepare for technical and behavioral questions.",
+      "Job search strategies, networking tips, and salary negotiation guidance.",
+      "Comprehensive support to transition smoothly from education to employment.",
+    ],
+    detailContent: "Our comprehensive career services are designed to bridge the gap between education and employment. We'll help you craft a compelling resume that highlights your newly acquired skills and projects. Our career coaches conduct mock interviews to prepare you for technical and behavioral questions. Additionally, we provide guidance on job search strategies and salary negotiation.",
+    mediaType: "video",
+    imageSrc: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=500&fit=crop",
+    gradient: "from-orange-400 to-amber-500",
+    bgPattern: "bg-amber-50"
+  },
 ];
 
-// CSS styles
-const styles = `
-  .features-container {
-    padding: 2rem 0;
-  }
-  
-  .features-nav {
-    display: flex;
-    overflow-x: auto;
-    padding: 0.5rem;
-    margin-bottom: 2rem;
-    background: #f8f9fa;
-    border-radius: 0.5rem;
-  }
-  
-  .feature-nav-item {
-    display: flex;
-    align-items: center;
-    padding: 0.75rem 1.25rem;
-    border-radius: 0.375rem;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-right: 0.5rem;
-  }
-  
-  .feature-nav-item-active {
-    background-color: #3b82f6;
-    color: white;
-  }
-  
-  .feature-nav-item-inactive {
-    background-color: transparent;
-    color: #1f2937;
-  }
-  
-  .feature-nav-item-inactive:hover {
-    background-color: #e5e7eb;
-  }
-  
-  .feature-content {
-    padding: 2rem;
-    border-radius: 0.5rem;
-    background-color: white;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  }
-  
-  .feature-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1.5rem;
-  }
-  
-  .feature-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 3rem;
-    height: 3rem;
-    border-radius: 9999px;
-    background-color: #dbeafe;
-    margin-right: 1rem;
-  }
-  
-  .feature-icon svg {
-    color: #3b82f6;
-  }
-  
-  .feature-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #111827;
-  }
-  
-  .feature-description {
-    font-size: 1.125rem;
-    color: #4b5563;
-    margin-bottom: 1.5rem;
-  }
-  
-  .content-layout {
-    display: flex;
-    flex-direction: row;
-    gap: 2rem;
-    margin-top: 2rem;
-  }
-  
-  .video-container {
-    flex: 1;
-    border-radius: 0.5rem;
-    overflow: hidden;
-    position: relative;
-    background-color: #f0f0f0;
-    aspect-ratio: 16/9;
-  }
-  
-  .video-element {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-  
-  .image-container {
-    flex: 1;
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    justify-content: space-between;
-
-  }
-  
-  .cert-image {
-    width: 47%;
-    border-radius: 0.5rem;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .cert-image img {
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: cover;
-  }
-  
-  .right-content {
-    flex: 1;
-  }
-  
-  .benefits-section {
-    background-color: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    border-left: 4px solid #3b82f6;
-    margin-bottom: 1.5rem;
-  }
-  
-  .benefits-title {
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    font-size: 1.1rem;
-    color: #1f2937;
-  }
-  
-  .benefits-list {
-    list-style-type: disc;
-    padding-left: 1.5rem;
-  }
-  
-  .benefits-list li {
-    margin-bottom: 0.5rem;
-  }
-  
-  .feature-detail-content {
-    line-height: 1.7;
-  }
-  
-  /* Custom back button style */
-  .back-button {
-    background-color: #000;
-    color: #fff;
-    border-radius: 40px;
-    padding: 0.5rem 0.5rem;
-    display: flex;
-    align-items: center;
-    transition: all 0.3s ease;
-    border: none;
-    font-weight: 500;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-  
-  // .back-button:hover {
-  //   background-color: #333;
-  //   transform: translateY(-2px);
-  //   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  // }
-  
-  /* Video preloader styles */
-  .video-preloader {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #f0f0f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2;
-  }
-  
-  .spinner {
-    animation: spin 1s linear infinite;
-  }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-  @media (max-width: 768px) {
-    .features-nav {
-      flex-wrap: nowrap;
-      justify-content: flex-start;
-    }
-    
-    .content-layout {
-      flex-direction: column;
-    }
-    
-    .image-container {
-      gap: 0.5rem;
-      flex-direction: column;
-    }
-    
-    .cert-image {
-      width: 100%;
-    }
-  }
-`;
-
-// Improved video component with loading state
-const VideoGif = ({ videoSrc }) => {
-	const videoRef = useRef(null);
-	const [isLoading, setIsLoading] = useState(true);
-
-	// Pre-load the video when component mounts
-	useEffect(() => {
-		setIsLoading(true);
-
-		// Create a new video element for preloading
-		const preloadVideo = document.createElement("video");
-		preloadVideo.src = videoSrc;
-		preloadVideo.muted = true;
-		preloadVideo.preload = "auto";
-
-		// Listen for data loaded event
-		preloadVideo.onloadeddata = () => {
-			if (videoRef.current) {
-				videoRef.current.load();
-				videoRef.current
-					.play()
-					.then(() => setIsLoading(false))
-					.catch((err) => {
-						console.log("Autoplay prevented:", err);
-						setIsLoading(false);
-					});
-			} else {
-				setIsLoading(false);
-			}
-		};
-
-		// Handle errors
-		preloadVideo.onerror = () => {
-			console.error("Error loading video");
-			setIsLoading(false);
-		};
-
-		// Start loading
-		preloadVideo.load();
-
-		return () => {
-			preloadVideo.onloadeddata = null;
-			preloadVideo.onerror = null;
-		};
-	}, [videoSrc]);
-
-	return (
-		<div className="video-container">
-			{isLoading && (
-				<div className="video-preloader">
-					<RefreshCw className="h-8 w-8 text-blue-500 spinner" />
-				</div>
-			)}
-			<video
-				ref={videoRef}
-				className="video-element"
-				muted
-				playsInline
-				loop={true}
-				autoPlay={true}
-				preload="auto"
-				onCanPlay={() => setIsLoading(false)}
-			>
-				<source src={videoSrc} type="video/mp4" />
-				Your browser does not support the video tag.
-			</video>
-		</div>
-	);
-};
-
-// Images component for certifications
-const CertificationImages = ({ images }) => {
-	return (
-		<div className="image-container">
-			{images.map((src, index) => (
-				<div key={index} className="cert-image">
-					<img src={src} alt={`Certification example ${index + 1}`} />
-				</div>
-			))}
-		</div>
-	);
-};
-
 const FeatureOverview = () => {
-	const navigate = useNavigate();
-	const { featureId } = useParams(); // Get the featureId from URL parameters
-	const [activeFeature, setActiveFeature] = useState(subFeatures[0].id);
-	const [videoLoaded, setVideoLoaded] = useState(false);
-	const [key, setKey] = useState(0); // Key to force re-render of video component
+  const [activeFeature, setActiveFeature] = useState(subFeatures[0].id);
+  const [key, setKey] = useState(0);
 
-	// Preload all videos when component mounts
-	useEffect(() => {
-		// Preload all videos in background
-		subFeatures.forEach((feature) => {
-			if (feature.mediaType === "video") {
-				const link = document.createElement("link");
-				link.rel = "preload";
-				link.href = feature.videoSrc;
-				link.as = "video";
-				document.head.appendChild(link);
-			}
-		});
-	}, []);
+  const handleFeatureClick = (featureId) => {
+    if (activeFeature !== featureId) {
+      setActiveFeature(featureId);
+      setKey((prevKey) => prevKey + 1);
+    }
+  };
 
-	// Effect to update activeFeature when featureId changes
-	useEffect(() => {
-		if (featureId && subFeatures.some((feature) => feature.id === featureId)) {
-			setActiveFeature(featureId);
-			// Force re-render of video component by changing the key
-			setKey((prevKey) => prevKey + 1);
-		}
-	}, [featureId]);
+  const activeFeatureData = subFeatures.find(
+    (feature) => feature.id === activeFeature
+  );
 
-	const handleFeatureClick = (featureId) => {
-		if (activeFeature !== featureId) {
-			setActiveFeature(featureId);
-			// Update URL without reloading the page
-			navigate(`/features/${featureId}`, { replace: true });
-			// Force re-render of video component
-			setKey((prevKey) => prevKey + 1);
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      <Navbar />
+      
+      {/* Hero Section */}
+      <div className="relative bg-black text-white overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-blue-500/20"></div>
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(circle at 20% 50%, rgba(249, 115, 22, 0.15) 0%, transparent 50%),
+                           radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%)`
+        }}></div>
+        
+        <div className="relative container mx-auto px-6 py-20">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 mb-6">
+              <Sparkles className="h-4 w-4 text-orange-400" />
+              <span className="text-sm font-medium">Empowering Your Learning Journey</span>
+            </div>
+            
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-orange-200 to-blue-200 bg-clip-text text-transparent">
+              Our Premium Features
+            </h1>
+            
+            <p className="text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto">
+              Discover the tools and services that will accelerate your learning journey and prepare you for success in the tech industry.
+            </p>
+          </div>
+        </div>
+        
+        {/* Decorative bottom wave */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
+            <path d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z" fill="white"/>
+          </svg>
+        </div>
+      </div>
 
-			// Smoothly scroll to content on mobile
-			if (window.innerWidth < 768) {
-				const contentElement = document.getElementById("feature-content");
-				if (contentElement) {
-					contentElement.scrollIntoView({ behavior: "smooth" });
-				}
-			}
-		}
-	};
+      {/* Features Navigation - Card Style */}
+      <div className="container mx-auto px-6 -mt-12 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {subFeatures.map((feature, index) => {
+            const IconComponent = feature.icon;
+            return (
+              <button
+                key={feature.id}
+                onClick={() => handleFeatureClick(feature.id)}
+                className={`group relative p-6 rounded-2xl transition-all duration-300 transform hover:scale-105 ${
+                  activeFeature === feature.id
+                    ? 'bg-gradient-to-br ' + feature.gradient + ' text-white shadow-2xl'
+                    : 'bg-white text-gray-800 shadow-lg hover:shadow-xl'
+                }`}
+              >
+                <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-4 transition-all ${
+                  activeFeature === feature.id
+                    ? 'bg-white/20 backdrop-blur-sm'
+                    : 'bg-gradient-to-br ' + feature.gradient
+                }`}>
+                  <IconComponent className="h-7 w-7 text-white" />
+                </div>
+                
+                <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
+                
+                <div className={`h-1 w-12 rounded-full transition-all duration-300 ${
+                  activeFeature === feature.id ? 'bg-white' : 'bg-gradient-to-r ' + feature.gradient
+                }`}></div>
+                
+                {activeFeature === feature.id && (
+                  <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2">
+                    <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-lg">
+                      <div className={`w-3 h-3 rounded-full bg-gradient-to-br ${feature.gradient}`}></div>
+                    </div>
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
-	// Get the active feature data
-	const activeFeatureData = subFeatures.find(
-		(feature) => feature.id === activeFeature
-	);
+      {/* Feature Content */}
+      {activeFeatureData && (
+        <div className="py-8 md:py-16">
+          <div className="space-y-0">
+            {/* Full Width Image Section with Overlay Content */}
+            <div className="relative w-full">
+              <img
+                key={`image-${activeFeature}-${key}`}
+                src={activeFeatureData.imageSrc}
+                alt={activeFeatureData.title}
+                className="w-full h-[250px] md:h-[350px] object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+              
+              {/* Content Overlay on Image */}
+              <div className="absolute inset-0 flex items-end">
+                <div className="container mx-auto px-4 md:px-6 pb-6 md:pb-10">
+                  <div className="inline-flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+                    <div className={`w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br ${activeFeatureData.gradient} flex items-center justify-center shadow-lg`}>
+                      {React.createElement(activeFeatureData.icon, {
+                        className: 'h-6 w-6 md:h-8 md:w-8 text-white'
+                      })}
+                    </div>
+                    <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
+                      {activeFeatureData.title}
+                    </h2>
+                  </div>
+                  
+                  <p className="text-base md:text-lg lg:text-xl text-white/90 leading-relaxed max-w-3xl">
+                    {activeFeatureData.description}
+                  </p>
+                </div>
+              </div>
+            </div>
 
-	// Render the appropriate media based on the feature type
-	const renderMedia = () => {
-		if (!activeFeatureData) return null;
+            {/* Bottom Content - Full Width */}
+            <div className={`w-full ${activeFeatureData.bgPattern}`}>
+              <div className="container mx-auto px-4 md:px-6 py-8 md:py-12">
 
-		if (activeFeatureData.mediaType === "video") {
-			return (
-				<VideoGif
-					key={`video-${activeFeature}-${key}`}
-					videoSrc={activeFeatureData.videoSrc}
-				/>
-			);
-		}
-		// For certifications feature, we'll render the images in the main content area
-		return null;
-	};
+                {/* Two Cards Side by Side */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+                  {/* Benefits Card */}
+                  <div className="bg-white rounded-xl md:rounded-2xl p-6 md:p-8 shadow-lg border-l-4 border-orange-500">
+                    <h3 className="font-bold text-xl md:text-2xl mb-4 md:mb-6 flex items-center gap-2">
+                      <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${activeFeatureData.gradient}`}></div>
+                      Key Benefits
+                    </h3>
+                    <ul className="space-y-3 md:space-y-4">
+                      {activeFeatureData.benefits.map((benefit, index) => (
+                        <li key={index} className="flex items-start gap-2 md:gap-3 text-sm md:text-base text-gray-700">
+                          <div className={`mt-1 w-5 h-5 md:w-6 md:h-6 rounded-full bg-gradient-to-br ${activeFeatureData.gradient} flex items-center justify-center flex-shrink-0`}>
+                            <svg className="w-2.5 h-2.5 md:w-3 md:h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                          <span className="leading-relaxed">{benefit}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
 
-	return (
-		<div className="bg-gray-50 min-h-screen">
-			{/* Add the custom styles */}
-			<style>{styles}</style>
+                  {/* Details Card */}
+                  <div className="bg-white rounded-xl md:rounded-2xl p-6 md:p-8 shadow-lg border-l-4 border-blue-500">
+                    <h3 className="font-bold text-xl md:text-2xl mb-4 md:mb-6 flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500"></div>
+                      Why It Matters
+                    </h3>
+                    <p className="text-sm md:text-base lg:text-lg text-gray-700 leading-relaxed">
+                      {activeFeatureData.detailContent}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
-			{/* Include Navbar */}
-			<Navbar />
+      {/* Bottom CTA Section */}
+      <div className="container mx-auto px-4 md:px-6 py-8 md:py-12">
+        <div className="bg-gradient-to-r from-orange-500 to-blue-500 rounded-2xl md:rounded-3xl p-6 md:p-10 text-center text-white shadow-2xl relative overflow-hidden max-w-4xl mx-auto">
+          <div className="absolute inset-0 bg-black/10"></div>
+          <div className="relative z-10">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4">
+              Ready to Start Your Journey?
+            </h2>
+            <p className="text-base md:text-lg lg:text-xl mb-6 md:mb-8 text-white/90 max-w-2xl mx-auto px-4">
+              Join thousands of students who are already building their future with our comprehensive learning platform.
+            </p>
+            <button className="px-6 md:px-8 py-3 md:py-4 bg-white text-gray-900 rounded-full font-bold text-base md:text-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-xl">
+              Get Started Today
+            </button>
+          </div>
+        </div>
+      </div>
 
-			<div className="container mx-auto px-4 py-6">
-				<h1 className="text-3xl font-bold mb-4">Our Features</h1>
-				<p className="text-lg text-gray-600 mb-8">
-					Discover the tools and services that will accelerate your learning
-					journey and prepare you for success.
-				</p>
-
-				<div className="features-container">
-					{/* Features Navigation */}
-					<div className="features-nav">
-						{subFeatures.map((feature) => (
-							<button
-								key={feature.id}
-								onClick={() => handleFeatureClick(feature.id)}
-								className={`feature-nav-item ${
-									activeFeature === feature.id
-										? "feature-nav-item-active"
-										: "feature-nav-item-inactive"
-								}`}
-							>
-								<span className="mr-2">
-									{React.cloneElement(feature.icon, {
-										className: `h-5 w-5 ${
-											activeFeature === feature.id
-												? "text-white"
-												: "text-primary"
-										}`,
-									})}
-								</span>
-								<span>{feature.title}</span>
-							</button>
-						))}
-					</div>
-
-					{/* Feature Content */}
-					{activeFeatureData && (
-						<div id="feature-content" className="feature-content">
-							<div className="feature-header">
-								<div className="feature-icon">{activeFeatureData.icon}</div>
-								<h2 className="feature-title">{activeFeatureData.title}</h2>
-							</div>
-
-							<p className="feature-description">
-								{activeFeatureData.description}
-							</p>
-
-							{/* Layout varies between video features and certification feature */}
-							{activeFeatureData.mediaType === "video" ? (
-								// Video features: Video (left) and Benefits (right) Layout
-								<div className="content-layout">
-									{/* Left Side - Video */}
-									{renderMedia()}
-
-									{/* Right Side - Benefits and Details */}
-									<div className="right-content">
-										{/* Benefits Section */}
-										<div className="benefits-section">
-											<h3 className="benefits-title">Key Benefits:</h3>
-											<ul className="benefits-list">
-												{activeFeatureData.benefits.map((benefit, index) => (
-													<li key={index}>{benefit}</li>
-												))}
-											</ul>
-										</div>
-
-										{/* Detailed Content */}
-										<div className="feature-detail-content">
-											<p>{activeFeatureData.detailContent}</p>
-										</div>
-									</div>
-								</div>
-							) : (
-								// Certification feature: Images on top, Benefits and Details below
-								<div>
-									{/* Certificates side by side */}
-									<CertificationImages images={activeFeatureData.imageSrc} />
-
-									{/* Benefits Section */}
-									<div className="benefits-section">
-										<h3 className="benefits-title">Key Benefits:</h3>
-										<ul className="benefits-list">
-											{activeFeatureData.benefits.map((benefit, index) => (
-												<li key={index}>{benefit}</li>
-											))}
-										</ul>
-									</div>
-
-									{/* Detailed Content */}
-									<div className="feature-detail-content">
-										<p>{activeFeatureData.detailContent}</p>
-									</div>
-								</div>
-							)}
-						</div>
-					)}
-				</div>
-			</div>
-
-			{/* Homepage sections below */}
-			<TestimonialsSection />
-			<PlacementAssistance />
-			<CTASection />
-			<Footer />
-		</div>
-	);
+      <PlacementAssistance />
+      <Footer />
+    </div>
+  );
 };
 
 export default FeatureOverview;

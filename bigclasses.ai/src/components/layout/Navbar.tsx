@@ -4,8 +4,6 @@ import { Menu, X, Phone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Lottie from "lottie-react";
 import startNowAnimation from "../../assets/animations/start_now_animation.json";
-// 1. THIS IS THE FIRST CHANGE: Import the wrapper instead of the direct component.
-import GeminiChatWrapper from "@/components/GeminiChatWrapper";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -13,15 +11,16 @@ const Navbar = () => {
   const [mobileFeatureDropdownOpen, setMobileFeatureDropdownOpen] = useState(false);
   const [mobileCourseDropdownOpen, setMobileCourseDropdownOpen] = useState(false);
   const [showFloatingButton, setShowFloatingButton] = useState(true);
-  const [isPhoneDropdownOpen, setIsPhoneDropdownOpen] = useState(false);
   const [mobileResourcesDropdownOpen, setMobileResourcesDropdownOpen] = useState(false);
   const [learningPathDropdownOpen, setLearningPathDropdownOpen] = useState(false);
   const learningPathTimeout = useRef<NodeJS.Timeout | null>(null);
   const navigate = useNavigate();
+  
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     setIsLoggedIn(!!token);
   }, []);
+  
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
@@ -30,26 +29,29 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+  
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
     setMobileFeatureDropdownOpen(false);
     setMobileCourseDropdownOpen(false);
   };
+  
   const toggleMobileCourseDropdown = () => {
     setMobileCourseDropdownOpen(!mobileCourseDropdownOpen);
   };
+  
   const toggleMobileFeatureDropdown = () => {
     setMobileFeatureDropdownOpen(!mobileFeatureDropdownOpen);
   };
-  const togglePhoneDropdown = () => {
-    setIsPhoneDropdownOpen(!isPhoneDropdownOpen);
-  };
+  
   const toggleMobileResourcesDropdown = () => {
     setMobileResourcesDropdownOpen(!mobileResourcesDropdownOpen);
   };
+  
   const toggleLearningPathDropdown = () => {
     setLearningPathDropdownOpen(!learningPathDropdownOpen);
   };
+  
   const handleScrollTo = (id: string) => {
     const section = document.getElementById(id);
     if (section) {
@@ -77,12 +79,11 @@ const Navbar = () => {
   };
 
   const handlePhoneCall = (phoneNumber: string) => {
-    window.open(`tel:${phoneNumber}`, '_self');
-    setIsPhoneDropdownOpen(false);
+    window.open(`https://wa.me/${phoneNumber}`, '_blank');
   };
 
   const handleContactClick = () => {
-    setIsPhoneDropdownOpen(true);
+    // Removed phone dropdown functionality
   };
 
   const handleScrollToSection = (sectionId: string) => {
@@ -181,82 +182,55 @@ const Navbar = () => {
           75% { transform: translateY(2px) scale(1.1); }
         }
 
-        /* Phone dropdown styles */
-        .phone-dropdown {
-          background: white;
-          border-radius: 12px;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-          border: 1px solid #e5e7eb;
-          overflow: hidden;
-          animation: slideUp 0.3s ease-out;
-        }
-        
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .phone-dropdown-header {
-          background: linear-gradient(135deg, #667eea, #764ba2);
-          color: white;
-          padding: 12px 16px;
+        /* Phone widget styles */
+        .phone-widget {
+          position: fixed;
+          right: 1rem;
+          bottom: 1.25rem;
+          z-index: 60;
           display: flex;
-          justify-content: space-between;
+          gap: 0.5rem;
           align-items: center;
         }
-
-        .phone-number-item {
-          padding: 12px 16px;
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          transition: background-color 0.2s ease;
-          cursor: pointer;
-          border-bottom: 1px solid #f3f4f6;
-        }
-
-        .phone-number-item:hover {
-          background-color: #f8fafc;
-        }
-
-        .phone-number-item:last-child {
-          border-bottom: none;
-        }
-
-        .phone-icon {
-          background: #10b981;
+        .phone-circle {
+          background: #00c853;
           color: white;
-          width: 32px;
-          height: 32px;
-          border-radius: 50%;
+          width: 48px;
+          height: 48px;
+          border-radius: 9999px;
           display: flex;
           align-items: center;
           justify-content: center;
+          box-shadow: 0 8px 20px rgba(0,200,83,0.15);
+          position: relative;
+        }
+        .phone-ring {
+          position: absolute;
+          inset: -6px;
+          border-radius: 9999px;
+          border: 6px solid rgba(0,200,83,0.22);
+          animation: pulse 1.6s infinite ease-out;
+        }
+        @keyframes pulse {
+          0% { transform: scale(1); opacity: 0.9; }
+          100% { transform: scale(1.9); opacity: 0; }
+        }
+        .phone-pill {
+          background: #fff;
+          padding: 6px 12px;
+          border-radius: 9999px;
+          box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+          display: flex;
+          align-items: center;
+        }
+        .phone-pill .number {
+          color: #000000;
+          font-weight: 700;
           font-size: 14px;
         }
-
-        .close-button {
-          background: none;
-          border: none;
-          color: white;
-          cursor: pointer;
-          padding: 4px;
-          border-radius: 4px;
-          transition: background-color 0.2s ease;
-        }
-
-        .close-button:hover {
-          background-color: rgba(255, 255, 255, 0.2);
-        }
       `}</style>
-<nav className="bg-white py-2 sticky top-0 z-50 shadow-sm">
-  <div className="w-full px-4 md:px-8 flex items-center justify-between">
+<nav className="bg-white h-14 sticky top-0 z-50 shadow-sm">
+  <div className="w-full px-4 md:px-8 flex items-center justify-between h-full">
     {/* Logo - adjusted margin */}
     <div className="flex items-center gap-2">
       <button
@@ -267,13 +241,13 @@ const Navbar = () => {
         className="flex items-center gap-2"
       >
         <img
-          src="\lovable-uploads\Big_Classes_LOGO.webp"
-          alt="BigClasses.AI Logo"
-          className="h-10 w-auto"
+          src="\lovable-uploads\logo.webp"
+          alt="Lyntra Data Logo"
+          className="h-28 md:h-28 lg:h-30 w-auto pointer-events-none"
+          style={{ display: 'block' }}
         />
       </button>
     </div>
-
     {/* Center Nav Links - adjusted spacing and width */}
     <div className="hidden md:flex justify-center items-center space-x-12 flex-1 max-w-3xl mx-auto px-4">
       <button
@@ -414,12 +388,7 @@ const Navbar = () => {
           >
             Career Services
           </button>
-          <button
-            onClick={() => handleFeatureClick("certifications")}
-            className="block w-full text-left px-6 py-3 hover:bg-gray-100 text-sm text-gray-800"
-          >
-            Certifications
-          </button>
+          {/* Certifications removed */}
           {/* Link to view all features */}
           <button
             onClick={() => navigate("/features")}
@@ -429,90 +398,22 @@ const Navbar = () => {
           </button>
         </div>
       </div>
-      {/* Learning Path dropdown with improved hover/click behavior */}
-      <div
-        className="relative"
-        onMouseEnter={() => {
-          if (learningPathTimeout.current) clearTimeout(learningPathTimeout.current);
-          setLearningPathDropdownOpen(true);
-        }}
-        onMouseLeave={() => {
-          if (learningPathTimeout.current) clearTimeout(learningPathTimeout.current);
-          learningPathTimeout.current = setTimeout(() => setLearningPathDropdownOpen(false), 400); // 400ms delay
-        }}
-      >
-        <button
-          type="button"
-          aria-haspopup="true"
-          aria-expanded={learningPathDropdownOpen}
-          onClick={toggleLearningPathDropdown}
-          className={`text-black hover:text-primary transition-colors flex items-center space-x-2 whitespace-nowrap ${learningPathDropdownOpen ? "text-blue-600" : ""}`}
-        >
-          <span>Learning Path</span>
-          <svg
-            className={`w-4 h-4 transform transition-transform ${learningPathDropdownOpen ? 'rotate-180' : ''}`}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <path d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-        <div
-          className={`absolute top-full left-0 mt-2 w-44 bg-white shadow-lg rounded-md border border-gray-100 z-20 transition-all duration-150
-            ${learningPathDropdownOpen ? "opacity-100 visible pointer-events-auto" : "opacity-0 invisible pointer-events-none"}`}
-          onMouseEnter={() => {
-            if (learningPathTimeout.current) clearTimeout(learningPathTimeout.current);
-            setLearningPathDropdownOpen(true);
-          }}
-          onMouseLeave={() => {
-            if (learningPathTimeout.current) clearTimeout(learningPathTimeout.current);
-            learningPathTimeout.current = setTimeout(() => setLearningPathDropdownOpen(false), 400); // 400ms delay
-          }}
-        >
-          <button
-            onClick={() => {
-              navigate("/blog");
-              setLearningPathDropdownOpen(false);
-            }}
-            className="block w-full text-left px-6 py-3 hover:bg-gray-100 text-sm text-gray-800"
-            tabIndex={learningPathDropdownOpen ? 0 : -1}
-          >
-            Blog
-          </button>
-        </div>
-      </div>
-      <button
-        onClick={() => handleScrollToSection('testimonials')}
-        className="text-black hover:text-primary transition-colors whitespace-nowrap"
-      >
-        Testimonials
-      </button>
+      {/* Testimonials removed from navbar */}
     </div>
 
     {/* Right Auth Buttons - adjusted margin */}
-    <div className="hidden md:flex items-center ml-4">
+    <div className="hidden md:flex items-center ml-4 space-x-4">
       {isLoggedIn ? (
-        <div className="flex items-center space-x-4">
-          <Button variant="outline" className="rounded-full px-6" onClick={handleLogout}>
-            Sign out
-          </Button>
-        </div>
+        <Button variant="outline" className="rounded-full px-6" onClick={handleLogout}>
+          Sign out
+        </Button>
       ) : (
-        <div className="w-32 h-16 flex items-center"> {/* Changed width from w-24 to w-32 */}
-          <Lottie 
-            animationData={startNowAnimation}
-            loop={true}
-            className="cursor-pointer hover:scale-110 transition-transform"
-            onClick={(e) => {
-              const target = e.target as HTMLElement;
-              if (target.closest('svg')) {
-                handleStartNowClick();
-              }
-            }}
-          />
-        </div>
+        <Button
+          className="rounded-full px-6 py-2 font-semibold bg-orange-500 text-white hover:bg-orange-600 shadow-lg"
+          onClick={() => navigate("/signup")}
+        >
+          Enroll Now
+        </Button>
       )}
     </div>
 
@@ -659,12 +560,7 @@ const Navbar = () => {
               >
                 Career Services
               </button>
-              <button
-                onClick={() => handleFeatureClick("certifications")}
-                className="text-left text-gray-700 hover:text-blue-500"
-              >
-                Certifications
-              </button>
+              {/* Certifications removed from mobile features */}
               <button
                 onClick={() => {
                   navigate("/features");
@@ -679,45 +575,9 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Learning Path dropdown for mobile */}
-        <div className="py-2">
-          <button
-            onClick={toggleLearningPathDropdown}
-            className="w-full text-left flex items-center justify-between text-black hover:text-blue-500 transition-colors"
-          >
-            <span>Learning Path</span>
-            <svg
-              className={`w-4 h-4 transform transition-transform ${learningPathDropdownOpen ? 'rotate-180' : ''}`}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-          {learningPathDropdownOpen && (
-            <div className="pl-4 flex flex-col space-y-2 mt-2">
-              <button
-                className="text-left text-gray-700 hover:text-blue-500"
-                onClick={() => {
-                  navigate("/blog");
-                  setIsMenuOpen(false);
-                  setLearningPathDropdownOpen(false);
-                }}
-              >
-                Blog
-              </button>
-            </div>
-          )}
-        </div>
+        {/* Mobile Learning Path removed */}
 
-        <button
-          onClick={() => handleScrollToSection('testimonials')}
-          className="text-black hover:text-primary transition-colors py-2 w-full text-left sm:text-center"
-        >
-          Testimonials
-        </button>
+        {/* Testimonials removed from mobile menu */}
         <div className="flex flex-col items-start sm:items-center space-y-4 pt-4">
           {isLoggedIn ? (
             <>
@@ -739,21 +599,16 @@ const Navbar = () => {
               </Button>
             </>
           ) : (
-            <div className="flex flex-col space-y-3">
-              <div className="w-32 h-16 mx-auto flex items-center"> {/* Changed width from w-24 to w-32 */}
-                <Lottie 
-                  animationData={startNowAnimation}
-                  loop={true}
-                  className="cursor-pointer hover:scale-110 transition-transform"
-                  onClick={(e) => {
-                    const target = e.target as HTMLElement;
-                    if (target.closest('svg')) {
-                      handleStartNowClick();
-                      setIsMenuOpen(false);
-                    }
-                  }}
-                />
-              </div>
+            <div className="flex flex-col space-y-3 w-full">
+              <Button
+                className="rounded-full w-full px-6 py-2 font-semibold bg-orange-500 text-white hover:bg-orange-600 shadow-lg"
+                onClick={() => {
+                  navigate("/signup");
+                  setIsMenuOpen(false);
+                }}
+              >
+                Enroll Now
+              </Button>
               <div className="text-center py-2 text-gray-600 text-sm">
                 Welcome! Ready to begin your learning journey?
               </div>
@@ -765,55 +620,24 @@ const Navbar = () => {
   )}
 </nav>
 
-{/* Floating Contact Buttons - All on right, equally spaced */}
+{/* Floating Phone Widget */}
       {!isLoggedIn && showFloatingButton && (
         <>          
-          {/* Adjusting positioning to prevent overlapping */}
-          <div className="fixed z-50 flex flex-col space-y-3"> {/* Reduced space-y-6 to space-y-3 */}
-            {/* 1. Top: AI Chat (GeminiChatWrapper) */}
-            <div className="fixed bottom-36 right-4"> {/* Adjusted bottom and right for smaller icons */}
-              <div style={{ width: 44, height: 44 }}> {/* Set a fixed smaller size */}
-                <GeminiChatWrapper iconSize={22} /> {/* Pass iconSize if supported */}
+          {/* Floating Phone Widget */}
+          <div className="phone-widget" role="group" aria-label="Contact via WhatsApp">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div 
+                className="phone-circle" 
+                onClick={() => handlePhoneCall('918182881234')} 
+                role="button" 
+                style={{ cursor: 'pointer' }}
+              >
+                <div className="phone-ring" aria-hidden="true"></div>
+                <Phone size={18} />
               </div>
-            </div>
-            {/* 2. Middle: Phone Contact Button */}
-            <div className="fixed bottom-20 right-4"> {/* Adjusted bottom and right */}
-              <Button
-                onClick={togglePhoneDropdown}
-                className="phone-floating-button w-11 h-11 p-0 flex items-center justify-center shadow-2xl" // w-12 h-12 -> w-11 h-11
-                style={{ minWidth: 44, minHeight: 44 }} // Ensure minimum clickable area
-              >
-                <Phone size={18} /> {/* Decreased icon size */}
-              </Button>
-              {isPhoneDropdownOpen && (
-                <div className="phone-dropdown absolute bottom-14 right-0 w-60 mb-2"> {/* Adjusted bottom and width */}
-                  <div className="phone-dropdown-header">
-                    <span className="font-medium">Call Us (Or) WhatsApp Us</span>
-                    <button 
-                      onClick={togglePhoneDropdown}
-                      className="close-button"
-                    >
-                      <X size={16} /> {/* Smaller close icon */}
-                    </button>
-                  </div>
-                  <div className="phone-number-item" onClick={() => handlePhoneCall('+919666523199')}>
-                    <div className="phone-icon" style={{ width: 28, height: 28 }}> {/* Smaller phone icon */}
-                      <Phone size={14} />
-                    </div>
-                    <span className="font-medium text-gray-800">+91 9666523199</span>
-                  </div>
-                </div>
-              )}
-            </div>
-            {/* 3. Bottom: Enroll Now Button */}
-            <div className="fixed bottom-4 right-4"> {/* Adjusted bottom and right */}
-              <Button
-                className="vibrate-button gradient-button-floating rounded-full px-3 py-1.5 text-xs font-medium hover:shadow-xl" // px-4 py-2 text-sm -> px-3 py-1.5 text-xs
-                style={{ minWidth: 110, minHeight: 36 }} // Slightly smaller button
-                onClick={() => navigate("/signup")}
-              >
-                🚀 Enroll Now
-              </Button>
+              <div className="phone-pill" onClick={() => handlePhoneCall('918182881234')} style={{ cursor: 'pointer' }}>
+                <span className="number">8328497113</span>
+              </div>
             </div>
           </div>
         </>
@@ -821,6 +645,5 @@ const Navbar = () => {
     </>
   );
 };
-
 
 export default Navbar;
