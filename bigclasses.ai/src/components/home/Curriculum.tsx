@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axiosInstance from '@/lib/axiosConfig';
-import { CheckCircle, ChevronDown, ChevronUp, Loader2, AlertCircle, BookOpen } from "lucide-react";
+import { CheckCircle, ChevronRight, Loader2, AlertCircle, BookOpen, FileText, Award, PlayCircle } from "lucide-react";
 
 interface Topic {
   title: string;
-  // Add other topic properties if needed, e.g., duration, type (video, reading)
 }
 
 interface Module {
@@ -19,29 +18,25 @@ const Curriculum: React.FC = () => {
   const [modules, setModules] = useState<Module[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [openModuleIndex, setOpenModuleIndex] = useState<number | null>(0); // Open first module by default? Or null
-  const [completedTopics, setCompletedTopics] = useState<Record<string, boolean>>({}); // Persistence needed for real use
+  const [selectedModuleIndex, setSelectedModuleIndex] = useState<number | null>(null);
+  const [showTopics, setShowTopics] = useState<boolean>(false);
+  const [completedTopics, setCompletedTopics] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-     if (!id) {
-       setError("Course ID is missing.");
-       setLoading(false);
-       return;
-     }
+    if (!id) {
+      setError("Course ID is missing.");
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     setError(null);
     axiosInstance.get(`/courses/${id}/`)
       .then(res => {
-        // Validate the curriculum structure
         if (res.data && Array.isArray(res.data.curriculum)) {
           setModules(res.data.curriculum);
-           // Optionally open the first module if curriculum exists
-           if (res.data.curriculum.length > 0) {
-              // setOpenModuleIndex(0); // Uncomment to open first module by default
-           }
         } else {
           setError("No valid curriculum data found for this course.");
-           setModules([]); // Ensure modules is an empty array
+          setModules([]);
         }
       })
       .catch(err => {
@@ -53,117 +48,256 @@ const Curriculum: React.FC = () => {
       });
   }, [id]);
 
-  const toggleModule = (index: number) => {
-    setOpenModuleIndex(prevIndex => (prevIndex === index ? null : index));
+  const handleModuleSelect = (idx: number) => {
+    setSelectedModuleIndex(idx);
+    setShowTopics(false);
   };
 
-  // Note: This state is temporary. For persistence, you'd need to save this to localStorage or backend.
   const toggleTopicCompletion = (topicTitle: string) => {
     setCompletedTopics(prev => ({ ...prev, [topicTitle]: !prev[topicTitle] }));
   };
 
-   if (loading) {
-     return (
-       <section className="bg-white py-20 px-4 sm:px-6 lg:px-8 min-h-[400px] flex items-center justify-center">
-         <div className="text-center">
-           <Loader2 className="h-10 w-10 animate-spin text-blue-600 mx-auto mb-3" />
-           <p className="text-gray-600">Loading Curriculum...</p>
-         </div>
-       </section>
-     );
-   }
+  const getModuleProgress = (module: Module) => {
+    if (!module.topics || module.topics.length === 0) return 0;
+    const completed = module.topics.filter(t => completedTopics[t.title]).length;
+    return Math.round((completed / module.topics.length) * 100);
+  };
 
-   if (error) {
-     return (
-       <section className="bg-white py-20 px-4 sm:px-6 lg:px-8 min-h-[400px] flex items-center justify-center">
-         <div className="text-center bg-red-50 p-6 rounded-lg shadow-sm max-w-md mx-auto">
-           <AlertCircle className="h-10 w-10 text-red-500 mx-auto mb-3" />
-           <h2 className="text-lg font-semibold text-red-700 mb-1">Error Loading Curriculum</h2>
-           <p className="text-red-600 text-sm">{error}</p>
-         </div>
-       </section>
-     );
-   }
+  if (loading) {
+    return (
+      <section className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-20 px-4 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin text-indigo-600 mx-auto mb-4" />
+          <p className="text-gray-700 font-medium">Loading Curriculum...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-20 px-4 flex items-center justify-center">
+        <div className="text-center bg-white p-8 rounded-2xl shadow-xl max-w-md mx-auto border border-red-100">
+          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Error Loading Curriculum</h2>
+          <p className="text-gray-600">{error}</p>
+        </div>
+      </section>
+    );
+  }
+
+  const selectedModule = selectedModuleIndex !== null ? modules[selectedModuleIndex] : null;
+  const progress = selectedModule ? getModuleProgress(selectedModule) : 0;
 
   return (
-     <section id="curriculum" className="bg-white py-16 md:py-24 px-4 sm:px-6 lg:px-8">
-       <div className="container mx-auto max-w-4xl"> {/* Constrain width for readability */}
-         <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-4">
-           Course Curriculum
-         </h2>
-         <p className="text-lg text-center text-gray-600 mb-12 md:mb-16">
-           Explore the detailed modules and topics covered in this course.
-         </p>
+    <section className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 md:py-20 px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto max-w-7xl">
+        {/* Header */}
+        <div className="text-center mb-12 md:mb-16">
+          <div className="inline-flex items-center justify-center p-2 bg-indigo-100 rounded-full mb-4">
+            <BookOpen className="h-6 w-6 text-indigo-600" />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            Course Curriculum
+          </h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Master every concept through our structured learning path
+          </p>
+        </div>
 
-          {modules.length === 0 ? (
-             <div className="text-center py-16">
-               <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-               <p className="text-lg text-gray-500">The curriculum for this course is not yet available.</p>
-               <p className="text-sm text-gray-400 mt-2">Please check back later or contact support.</p>
-             </div>
-           ) : (
-             <div className="space-y-4">
-               {modules.map((module, idx) => {
-                 const isOpen = openModuleIndex === idx;
-                 return (
-                   <div key={`module-${idx}`} className="border border-gray-200 rounded-lg overflow-hidden shadow-sm bg-white transition-shadow hover:shadow-md">
-                      {/* Module Header - Clickable Area */}
+        {modules.length === 0 ? (
+          <div className="text-center py-20 bg-white rounded-3xl shadow-lg">
+            <BookOpen className="h-20 w-20 text-gray-300 mx-auto mb-6" />
+            <h3 className="text-2xl font-semibold text-gray-700 mb-2">Curriculum Coming Soon</h3>
+            <p className="text-gray-500">The curriculum for this course is being prepared.</p>
+          </div>
+        ) : (
+          <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
+            {/* Sidebar - Module List */}
+            <div className="lg:col-span-1">
+              <div className="bg-white rounded-3xl shadow-xl p-6 sticky top-6">
+                <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                  <Award className="h-5 w-5 mr-2 text-indigo-600" />
+                  Modules
+                </h2>
+                <div className="space-y-3">
+                  {modules.map((module, idx) => {
+                    const moduleProgress = getModuleProgress(module);
+                    const isSelected = selectedModuleIndex === idx;
+                    return (
                       <button
-                       onClick={() => toggleModule(idx)}
-                       className="w-full flex justify-between items-center p-5 md:p-6 text-left hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50"
-                       aria-expanded={isOpen}
-                       aria-controls={`module-content-${idx}`}
-                     >
-                       <div className="flex-grow pr-4">
-                         <span className="text-xs font-semibold uppercase tracking-wider text-blue-600 mb-1 block">Module {idx + 1}</span>
-                         <h3 className="text-lg md:text-xl font-semibold text-gray-800">{module.title}</h3>
-                          {/* Optional: Show description only when closed? Or keep it always visible */}
-                          {!isOpen && <p className="text-sm text-gray-500 mt-1 truncate">{module.description}</p>}
+                        key={`module-${idx}`}
+                        onClick={() => handleModuleSelect(idx)}
+                        className={`w-full text-left p-3 rounded-xl transition-all duration-300 ${
+                          isSelected
+                            ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg scale-105'
+                            : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:shadow-md'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex-grow">
+                            <span className={`text-xs font-semibold uppercase tracking-wider mb-1 block ${
+                              isSelected ? 'text-indigo-100' : 'text-indigo-600'
+                            }`}>
+                              Module {idx + 1}
+                            </span>
+                            <h3 className={`font-semibold text-sm line-clamp-2 ${
+                              isSelected ? 'text-white' : 'text-gray-900'
+                            }`}>
+                              {module.title}
+                            </h3>
+                          </div>
+                          <ChevronRight className={`flex-shrink-0 ml-2 transition-transform ${
+                            isSelected ? 'transform translate-x-1 text-white' : 'text-gray-400'
+                          }`} size={18} />
                         </div>
-                       {isOpen ? <ChevronUp size={24} className="text-gray-500 flex-shrink-0" /> : <ChevronDown size={24} className="text-gray-500 flex-shrink-0" />}
-                     </button>
+                        {/* Progress Bar */}
+                        <div className="mt-2">
+                          <div className={`w-full h-1.5 rounded-full overflow-hidden ${
+                            isSelected ? 'bg-white/20' : 'bg-gray-200'
+                          }`}>
+                            <div
+                              className={`h-full transition-all duration-500 rounded-full ${
+                                isSelected ? 'bg-white' : 'bg-indigo-500'
+                              }`}
+                              style={{ width: `${moduleProgress}%` }}
+                            />
+                          </div>
+                          <p className={`text-xs mt-1 ${
+                            isSelected ? 'text-indigo-100' : 'text-gray-500'
+                          }`}>
+                            {moduleProgress}% complete
+                          </p>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
 
-                     {/* Module Content - Expandable Area */}
-                     <div
-                       id={`module-content-${idx}`}
-                       className={`transition-all duration-500 ease-in-out overflow-hidden ${isOpen ? 'max-h-[1000px]' : 'max-h-0'}`} // Adjust max-height if needed
-                     >
-                       <div className="px-5 md:px-6 pb-6 pt-4 border-t border-gray-200">
-                         <p className="text-sm text-gray-600 mb-5">{module.description}</p>
-                         {(!module.topics || module.topics.length === 0) ? (
-                           <p className="text-sm text-gray-500 italic">No specific topics listed for this module.</p>
-                         ) : (
-                           <ul className="space-y-3">
-                             {module.topics.map((topic, tidx) => (
-                               <li key={`topic-${idx}-${tidx}`} className="flex items-center space-x-3 group">
-                                 <button
-                                   onClick={() => toggleTopicCompletion(topic.title)}
-                                   className={`flex-shrink-0 focus:outline-none rounded-full p-0.5 ${completedTopics[topic.title] ? 'bg-green-100' : 'bg-gray-200 group-hover:bg-gray-300'}`}
-                                   title={completedTopics[topic.title] ? "Mark as incomplete" : "Mark as complete"}
-                                 >
-                                   <CheckCircle
-                                     size={20}
-                                     className={`transition-colors ${completedTopics[topic.title] ? "text-green-500" : "text-gray-400 group-hover:text-gray-600"}`}
-                                   />
-                                 </button>
-                                  <span className={`text-base text-gray-700 ${completedTopics[topic.title] ? 'line-through text-gray-500' : ''}`}>
-                                   {topic.title}
-                                 </span>
-                                 {/* Optional: Add icons for topic type (video, reading) or duration */}
-                               </li>
-                             ))}
-                           </ul>
-                         )}
-                       </div>
-                     </div>
-                   </div>
-                 );
-               })}
-             </div>
-           )}
-         </div>
-       </section>
-   );
- };
+            {/* Main Content - Module Details */}
+            <div className="lg:col-span-2">
+              {!selectedModule ? (
+                <div className="bg-white rounded-3xl shadow-xl p-12 text-center">
+                  <BookOpen className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-gray-700 mb-2">Select a Module</h3>
+                  <p className="text-gray-500">Choose a module from the left to view its details</p>
+                </div>
+              ) : (
+                <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
+                  {/* Module Header */}
+                  <div className="bg-gradient-to-r from-indigo-500 to-purple-500 p-8 md:p-10 text-white">
+                    <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-semibold uppercase tracking-wider mb-4">
+                      Module {selectedModuleIndex! + 1}
+                    </span>
+                    <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                      {selectedModule.title}
+                    </h2>
+                    <p className="text-indigo-100 text-lg leading-relaxed">
+                      {selectedModule.description}
+                    </p>
+                    
+                    {/* Stats */}
+                    <div className="flex flex-wrap gap-6 mt-6 pt-6 border-t border-white/20">
+                      <div className="flex items-center">
+                        <FileText className="h-5 w-5 mr-2 text-indigo-200" />
+                        <span className="text-sm">
+                          {selectedModule.topics?.length || 0} Topics
+                        </span>
+                      </div>
+                      <div className="flex items-center">
+                        <CheckCircle className="h-5 w-5 mr-2 text-indigo-200" />
+                        <span className="text-sm">
+                          {progress}% Complete
+                        </span>
+                      </div>
+                    </div>
 
- export default Curriculum;
+                    {/* View Topics Button */}
+                    <div className="mt-6 flex gap-3">
+                      {!showTopics ? (
+                        <button
+                          onClick={() => setShowTopics(true)}
+                          className="px-6 py-2.5 bg-white text-indigo-600 font-semibold rounded-lg hover:bg-indigo-50 transition-all duration-200 shadow-lg hover:shadow-xl"
+                        >
+                          View Topics
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setShowTopics(false)}
+                          className="px-6 py-2.5 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-lg hover:bg-white/30 transition-all duration-200 border border-white/30"
+                        >
+                          Close Topics
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Topics List - Only shown when button is clicked */}
+                  {showTopics && (
+                    <div className="p-8 md:p-10">
+                      {(!selectedModule.topics || selectedModule.topics.length === 0) ? (
+                        <div className="text-center py-12">
+                          <FileText className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                          <p className="text-gray-500">No topics available for this module yet.</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-3">
+                          <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center">
+                            <PlayCircle className="h-5 w-5 mr-2 text-indigo-600" />
+                            Learning Topics
+                          </h3>
+                          {selectedModule.topics.map((topic, tidx) => {
+                            const isCompleted = completedTopics[topic.title];
+                            return (
+                              <div
+                                key={`topic-${selectedModuleIndex}-${tidx}`}
+                                className={`group flex items-center p-4 rounded-xl border-2 transition-all duration-300 cursor-pointer ${
+                                  isCompleted
+                                    ? 'bg-green-50 border-green-200 hover:border-green-300'
+                                    : 'bg-gray-50 border-gray-200 hover:border-indigo-300 hover:bg-indigo-50'
+                                }`}
+                                onClick={() => toggleTopicCompletion(topic.title)}
+                              >
+                                <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center mr-4 transition-all ${
+                                  isCompleted
+                                    ? 'bg-green-500 shadow-lg shadow-green-200'
+                                    : 'bg-white border-2 border-gray-300 group-hover:border-indigo-400'
+                                }`}>
+                                  {isCompleted ? (
+                                    <CheckCircle size={20} className="text-white" />
+                                  ) : (
+                                    <span className="text-sm font-semibold text-gray-400 group-hover:text-indigo-600">
+                                      {tidx + 1}
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="flex-grow">
+                                  <p className={`font-medium transition-all ${
+                                    isCompleted ? 'text-gray-500 line-through' : 'text-gray-900'
+                                  }`}>
+                                    {topic.title}
+                                  </p>
+                                </div>
+                                {!isCompleted && (
+                                  <ChevronRight className="text-gray-400 group-hover:text-indigo-600 transition-colors" size={20} />
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+};
+
+export default Curriculum;

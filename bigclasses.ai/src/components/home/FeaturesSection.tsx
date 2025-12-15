@@ -17,7 +17,7 @@ const features = [
     title: "Intelligent Learning Powered by AI",
     description:
       "Experience personalized learning paths, smart recommendations, and real-time support—all driven by advanced artificial intelligence.",
-    image: "https://images.unsplash.com/photo-1677442d019e157be52e5a7523199cc57cb76b05d56ab78cb4cca2b3e8b3e8e4?w=600&h=400&fit=crop",
+    image: "/images/feature1.webp", // Update with your actual filename
   },
   {
     id: "interactive-discussions",
@@ -25,7 +25,7 @@ const features = [
     title: "Live Doubt-Clearing & Discussions",
     description:
       "Get your doubts resolved instantly through live, interactive sessions designed to enhance clarity and confidence.",
-    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop",
+    image: "/images/feature2.webp", // Update with your actual filename
   },
   {
     id: "progress-tracking",
@@ -33,7 +33,7 @@ const features = [
     title: "Smart Progress Analytics",
     description:
       "Our intelligent system analyzes your activity and gives clear insights into how far you've come and what to improve next.",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop",
+    image: "/images/feature3.webp", // Update with your actual filename
   },
   {
     id: "self-paced",
@@ -41,7 +41,7 @@ const features = [
     title: "Flexible Self-Paced Learning",
     description:
       "Access lessons anytime and progress as fast or slow as you need—without feeling rushed or pressured.",
-    image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=400&fit=crop",
+    image: "/images/feature4.webp", // Update with your actual filename
   },
   {
     id: "coding-exercises",
@@ -49,7 +49,7 @@ const features = [
     title: "Practical Coding Exercises",
     description:
       "Strengthen your skills with real-world coding tasks designed to build confidence and mastery through practice.",
-    image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=400&fit=crop",
+    image: "/images/feature5.webp", // Update with your actual filename
   },
   {
     id: "video-lectures",
@@ -57,7 +57,7 @@ const features = [
     title: "Immersive High-Definition Learning",
     description:
       "Experience learning like never before with visually rich HD videos that keep you focused and engaged.",
-    image: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=600&h=400&fit=crop",
+    image: "/images/feature6.webp", // Update with your actual filename
   },
 ];
 
