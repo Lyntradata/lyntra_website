@@ -58,6 +58,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://13.204.9.172:3001",  # or wherever your React app runs
     "http://localhost:3001",
     "http://localhost:3000",
+    "https://www.lyntradata.com",
+    "https://www.lyntra.in",
+    "http://18.60.216.198:3000",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -66,6 +69,9 @@ CSRF_TRUSTED_ORIGINS = [
     "http://13.204.9.172:3001",
     "http://localhost:3000",
     "http://localhost:3001",
+    "https://www.lyntradata.com",
+    "https://www.lyntra.in",
+    "http://18.60.216.198:3000",
 ]
 
 ROOT_URLCONF = 'backend.urls'
