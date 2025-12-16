@@ -11,10 +11,10 @@ rm -rf node_modules package-lock.json
 cd ..
 
 # Bring down only the STAGING containers
-docker-compose -f docker-compose.yml -p down
+docker-compose -f docker-compose.yml -p prod down
 
 # Build and start the staging stack
-docker-compose -f docker-compose.yml -p up -d --build
+docker-compose -f docker-compose.yml -p prod up -d --build
 
 # Test and restart Nginx
 sudo nginx -t
