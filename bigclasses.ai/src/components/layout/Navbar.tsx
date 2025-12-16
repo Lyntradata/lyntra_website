@@ -628,14 +628,14 @@ const Navbar = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <div 
                 className="phone-circle" 
-                onClick={() => handlePhoneCall('918182881234')} 
+                onClick={() => handlePhoneCall('918328497113')} 
                 role="button" 
                 style={{ cursor: 'pointer' }}
               >
                 <div className="phone-ring" aria-hidden="true"></div>
                 <Phone size={18} />
               </div>
-              <div className="phone-pill" onClick={() => handlePhoneCall('918182881234')} style={{ cursor: 'pointer' }}>
+              <div className="phone-pill" onClick={() => handlePhoneCall('918328497113')} style={{ cursor: 'pointer' }}>
                 <span className="number">8328497113</span>
               </div>
             </div>

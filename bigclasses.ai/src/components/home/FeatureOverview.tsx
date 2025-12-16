@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Layers, Headphones, Briefcase, RefreshCw, Sparkles } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import PlacementAssistance from "@/components/home/PlacementAssistance";
@@ -62,6 +63,7 @@ const subFeatures = [
 const FeatureOverview = () => {
   const [activeFeature, setActiveFeature] = useState(subFeatures[0].id);
   const [key, setKey] = useState(0);
+  const navigate = useNavigate();
 
   const handleFeatureClick = (featureId) => {
     if (activeFeature !== featureId) {
@@ -242,7 +244,7 @@ const FeatureOverview = () => {
             <p className="text-base md:text-lg lg:text-xl mb-6 md:mb-8 text-white/90 max-w-2xl mx-auto px-4">
               Join thousands of students who are already building their future with our comprehensive learning platform.
             </p>
-            <button className="px-6 md:px-8 py-3 md:py-4 bg-white text-gray-900 rounded-full font-bold text-base md:text-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-xl">
+            <button onClick={() => navigate('/signup')} className="px-6 md:px-8 py-3 md:py-4 bg-white text-gray-900 rounded-full font-bold text-base md:text-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-xl">
               Get Started Today
             </button>
           </div>

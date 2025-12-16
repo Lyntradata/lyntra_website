@@ -58,7 +58,7 @@ const Highlights: React.FC = () => {
   });
   const [formErrors, setFormErrors] = useState<FormErrors>({});
 
-  const contactPhoneNumber = "+91 9666523199";
+  const contactPhoneNumber = "+91 8328497113";
 
   const validateForm = (): boolean => {
     const errors: FormErrors = {};

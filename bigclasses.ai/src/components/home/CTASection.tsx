@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Play, X, ExternalLink, CheckCircle, Users, BookOpen } from "lucide-react";
 
 const CTASection = () => {
   const [showVideoModal, setShowVideoModal] = useState(false);
+  const navigate = useNavigate();
   const youtubeVideoLink = "https://www.youtube.com/watch?v=4MetEXswZtw&t=15s";
 
   const openVideoModal = () => setShowVideoModal(true);
@@ -43,6 +45,7 @@ Start your journey toward smarter, more effective learning.
               {/* CTA Button */}
               <div className="pt-4">
                 <Button
+                  onClick={() => navigate('/signup')}
                   size="lg"
                   className="bg-orange-500 text-white hover:bg-orange-600 rounded-xl px-8 py-7 text-lg font-semibold shadow-xl shadow-orange-500/30 hover:shadow-2xl hover:shadow-orange-500/40 transition-all hover:-translate-y-0.5 group"
                 >
