@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   Facebook,
-  Twitter,
   Instagram,
   Youtube,
   Mail,
@@ -13,6 +12,19 @@ import {
   Users,
   Award,
 } from "lucide-react";
+
+// X (formerly Twitter) logo component
+const XIcon = ({ size = 20, color = "#000" }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    style={{ color }}
+  >
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.627l-5.1-6.694-5.867 6.694h-3.31l7.75-8.835L.424 2.25h6.844l4.915 6.494L17.68 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+  </svg>
+);
 
 const Footer = () => {
   const [email, setEmail] = useState("");
@@ -34,10 +46,10 @@ const Footer = () => {
     },
     {
       name: "Twitter",
-      url: "",
-      icon: Twitter,
-      color: "#1DA1F2",
-      hoverColor: "hover:bg-sky-50",
+      url: "https://x.com/lyntradata",
+      icon: XIcon,
+      color: "#000000",
+      hoverColor: "hover:bg-gray-50",
     },
     {
       name: "Instagram",
@@ -93,9 +105,9 @@ const Footer = () => {
             {/* Logo */}
             <div>
               <img
-                src="/lovable-uploads/logo.webp"
-                alt="BigClasses.AI"
-                className="h-24 md:h-28 lg:h-32 w-auto"
+                src="/lovable-uploads/lyntradata-logo.png"
+                alt="Lyntradata"
+                className="h-20 md:h-24 lg:h-28 w-auto"
               />
             </div>
 
@@ -197,7 +209,7 @@ const Footer = () => {
                     href="tel:+919666523199"
                     className="text-gray-600 group-hover:text-orange-600 transition-colors text-sm"
                   >
-                    +91 8328497113
+                    +91 7799350934
                   </a>
                 </li>
                 <li className="flex items-start gap-3 group">
@@ -208,7 +220,7 @@ const Footer = () => {
                     href="mailto:Info@bigclasses.ai"
                     className="text-gray-600 group-hover:text-blue-600 transition-colors text-sm break-all"
                   >
-                    Lyntradata@gmail.com
+                    lyntradata@gmail.com
                   </a>
                 </li>
               </ul>

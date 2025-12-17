@@ -2,7 +2,7 @@ import axios from 'axios';
 import { toast } from '@/hooks/use-toast';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://www.lyntradata.com/api',
+  baseURL: 'https://www.stage.lyntradata.com/api',
   // baseURL: 'http://localhost:8000/api',
   headers: {
     'Content-Type': 'application/json',

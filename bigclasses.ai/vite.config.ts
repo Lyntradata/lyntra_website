@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => ({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'https://www.lyntradata.com',
+        target: 'https://www.stage.lyntradata.com',
         // target: 'http://localhost:8000',
         changeOrigin: true,
         secure: false,

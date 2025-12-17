@@ -84,10 +84,10 @@ const Enroll = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <div className="flex-shrink-0 -ml-2">
-              <img 
-                src="/lovable-uploads/logo.webp" 
-                alt="Logo" 
-                className="h-16 w-auto object-contain"
+              <img
+                src="/lovable-uploads/lyntradata-logo.png"
+                alt="Lyntradata"
+                className="h-12 w-auto object-contain"
               />
             </div>
             <Button
@@ -364,7 +364,7 @@ const Enroll = () => {
       <footer className="bg-gray-900 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-gray-400">
-            Need help? <a href="mailto:Lyntradata@gmail.com" className="text-blue-400 font-semibold cursor-pointer hover:underline">Contact Support</a>
+            Need help? <a href="mailto:lyntradata@gmail.com" className="text-blue-400 font-semibold cursor-pointer hover:underline">Contact Support</a>
           </p>
           <p className="text-gray-500 text-sm mt-2">© 2025 Lyntra Data. All rights reserved.</p>
         </div>

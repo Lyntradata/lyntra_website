@@ -241,9 +241,9 @@ const Navbar = () => {
         className="flex items-center gap-2"
       >
         <img
-          src="\lovable-uploads\logo.webp"
-          alt="Lyntra Data Logo"
-          className="h-28 md:h-28 lg:h-30 w-auto pointer-events-none"
+          src="/lovable-uploads/lyntradata-logo.png"
+          alt="Lyntradata"
+          className="h-10 md:h-10 w-auto pointer-events-none"
           style={{ display: 'block' }}
         />
       </button>
@@ -628,15 +628,15 @@ const Navbar = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <div 
                 className="phone-circle" 
-                onClick={() => handlePhoneCall('918328497113')} 
+                onClick={() => handlePhoneCall('917799350934')} 
                 role="button" 
                 style={{ cursor: 'pointer' }}
               >
                 <div className="phone-ring" aria-hidden="true"></div>
                 <Phone size={18} />
               </div>
-              <div className="phone-pill" onClick={() => handlePhoneCall('918328497113')} style={{ cursor: 'pointer' }}>
-                <span className="number">8328497113</span>
+              <div className="phone-pill" onClick={() => handlePhoneCall('917799350934')} style={{ cursor: 'pointer' }}>
+                <span className="number">7799350934</span>
               </div>
             </div>
           </div>

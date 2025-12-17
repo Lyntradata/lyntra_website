@@ -1,20 +1,20 @@
 set -e  # Exit on any error
 
 # Go to staging project folder
-cd /home/ubuntu/lyntra_website
+cd /home/ubuntu/stage/lyntra_website
 
 # Pull latest code from stage branch
 git config pull.rebase false
-git pull origin prod
-cd /home/ubuntu/lyntra_website/bigclasses.ai
+git pull origin stage
+cd /home/ubuntu/stage/lyntra_website/bigclasses.ai
 rm -rf node_modules package-lock.json
 cd ..
 
 # Bring down only the STAGING containers
-docker-compose -f docker-compose.yml -p prod down
+docker-compose -f docker-compose.stage.yml -p stage down
 
 # Build and start the staging stack
-docker-compose -f docker-compose.yml -p prod up -d --build
+docker-compose -f docker-compose.stage.yml -p stage up -d --build
 
 # Test and restart Nginx
 sudo nginx -t

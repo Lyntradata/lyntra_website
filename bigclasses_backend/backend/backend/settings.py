@@ -61,6 +61,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://www.lyntradata.com",
     "https://www.lyntra.in",
     "http://18.60.216.198:3000",
+    "https://www.stage.lyntradata.com",
+    "http://18.60.216.198:3001",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -72,6 +74,9 @@ CSRF_TRUSTED_ORIGINS = [
     "https://www.lyntradata.com",
     "https://www.lyntra.in",
     "http://18.60.216.198:3000",
+    "https://www.stage.lyntradata.com",
+    "http://18.60.216.198:3001",
+
 ]
 
 ROOT_URLCONF = 'backend.urls'
