@@ -4,6 +4,8 @@ import { CheckCircle2, ArrowLeft } from "lucide-react";
 import { features } from "@/components/home/FeaturesSection";
 import Navbar from "@/components/layout/Navbar";
 import PlacementAssistance from "@/components/home/PlacementAssistance";
+import CTASection from "@/components/home/CTASection";
+
 import Footer from "@/components/layout/Footer";
 
 const getCustomDescription = (featureId) => {
@@ -200,6 +202,7 @@ const FeatureDetail = () => {
 
       {/* Placement assistance + footer */}
       <PlacementAssistance />
+      <CTASection/>
 
       <Footer />
 

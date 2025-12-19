@@ -35,6 +35,7 @@ const Enroll = () => {
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -59,17 +60,52 @@ const Enroll = () => {
       return;
     }
 
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+
+    setLoading(true);
+
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setSuccess("Enrollment successful! Welcome to your AI journey!");
+      // Replace with your Google Apps Script Web App URL
+      const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzpufECmhZKwvIgVljcgyXkfJOxBbUe3gEGPZ4MOhlzxWjmRIH31yNCDZ_re5_iiZOUog/exec';
+      
+      const submissionData = {
+        ...formData,
+        timestamp: new Date().toISOString(),
+      };
+
+      const response = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors', // Required for Google Apps Script
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submissionData),
+      });
+
+      // With no-cors mode, we can't read the response, so we assume success
+      setSuccess("Enrollment successful! Welcome to your AI journey! Check your email for confirmation.");
       setFormData({
         student_name: "",
         email: "",
         course_title: "",
         phone: "",
       });
+      
+      // Clear success message after 5 seconds
+      setTimeout(() => {
+        setSuccess("");
+      }, 5000);
+      
     } catch (err) {
-      setError("Enrollment failed. Please try again.");
+      console.error('Enrollment error:', err);
+      setError("Enrollment failed. Please try again or contact support.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -247,6 +283,7 @@ const Enroll = () => {
                         value={formData.student_name}
                         onChange={handleChange}
                         required
+                        disabled={loading}
                         className="h-12 border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:ring-orange-500 transition-all"
                       />
                     </div>
@@ -265,6 +302,7 @@ const Enroll = () => {
                         value={formData.email}
                         onChange={handleChange}
                         required
+                        disabled={loading}
                         className="h-12 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500 transition-all"
                       />
                     </div>
@@ -279,6 +317,7 @@ const Enroll = () => {
                         required
                         value={formData.course_title}
                         onValueChange={handleCourseChange}
+                        disabled={loading}
                       >
                         <SelectTrigger className="h-12 border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:ring-orange-500 transition-all">
                           <SelectValue placeholder="Choose your course" />
@@ -311,6 +350,7 @@ const Enroll = () => {
                         value={formData.phone}
                         onChange={handleChange}
                         required
+                        disabled={loading}
                         className="h-12 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500 transition-all"
                       />
                     </div>
@@ -320,6 +360,7 @@ const Enroll = () => {
                       <input
                         id="remember"
                         type="checkbox"
+                        disabled={loading}
                         className="h-5 w-5 text-orange-500 border-gray-300 rounded focus:ring-orange-500 cursor-pointer"
                       />
                       <label
@@ -333,10 +374,11 @@ const Enroll = () => {
                     {/* Submit Button */}
                     <Button
                       onClick={handleSubmit}
-                      type="submit"
-                      className="w-full h-14 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]"
+                      type="button"
+                      disabled={loading}
+                      className="w-full h-14 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                     >
-                      ENROLL NOW
+                      {loading ? "SUBMITTING..." : "ENROLL NOW"}
                     </Button>
                   </div>
 

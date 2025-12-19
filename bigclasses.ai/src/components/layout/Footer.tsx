@@ -29,17 +29,21 @@ const XIcon = ({ size = 20, color = "#000" }) => (
 const Footer = () => {
   const [email, setEmail] = useState("");
   const [subscribeStatus, setSubscribeStatus] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Replace this URL with your Google Apps Script web app URL
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzi3Tvukl_AdRrvcw5owFB4VFnA_XtrOEYKbGSX0siu4dEqfcMb-920dkUf-l3icDqlsw/exec";
 
   const openMapLocation = () => {
     const mapUrl =
-      "";
+      "https://www.google.com/maps/search/?api=1&query=PLOT+NO+4%2F2+SECTOR+1+RAM+SVR+HUDA+TECHNO+ENCLAVE+MADHAPUR+HYDERABAD+TELANGANA+INDIA+500081";
     window.open(mapUrl, "_blank");
   };
 
   const socialLinks = [
     {
       name: "Facebook",
-      url: "",
+      url: "https://www.facebook.com/lyntradata",
       icon: Facebook,
       color: "#1877F2",
       hoverColor: "hover:bg-blue-50",
@@ -67,21 +71,46 @@ const Footer = () => {
     },
   ];
 
-  const features = [
-    { icon: Sparkles, text: "AI-Powered Learning" },
-    { icon: BookOpen, text: "Expert Instructors" },
-    { icon: Users, text: "Global Community" },
-    { icon: Award, text: "Certified Courses" },
-  ];
-
-  const handleSubscribe = () => {
-    if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setSubscribeStatus("success");
-      setEmail("");
-      setTimeout(() => setSubscribeStatus(""), 3000);
-    } else {
+  const handleSubscribe = async () => {
+    // Validate email
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setSubscribeStatus("error");
       setTimeout(() => setSubscribeStatus(""), 3000);
+      return;
+    }
+
+    setIsLoading(true);
+    setSubscribeStatus("");
+
+    try {
+      const response = await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors", // Important for Google Apps Script
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+
+      // With no-cors mode, we can't read the response, so we assume success
+      setSubscribeStatus("success");
+      setEmail("");
+      setTimeout(() => setSubscribeStatus(""), 5000);
+    } catch (error) {
+      console.error("Subscription error:", error);
+      setSubscribeStatus("error");
+      setTimeout(() => setSubscribeStatus(""), 3000);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSubscribe();
     }
   };
 
@@ -197,8 +226,7 @@ const Footer = () => {
                     <MapPin size={18} className="text-blue-600" />
                   </div>
                   <span className="text-gray-600 group-hover:text-blue-600 transition-colors text-sm leading-relaxed flex-1">
-                  PLOT NO 4/2 SECTOR 1, RAM SVR, HUDA TECHNO ENCLAVE, MADHAPUR, HYDERABAD,TELANGANA, INDIA -500081
-
+                    PLOT NO 4/2 SECTOR 1, RAM SVR, HUDA TECHNO ENCLAVE, MADHAPUR, HYDERABAD, TELANGANA, INDIA - 500081
                   </span>
                 </li>
                 <li className="flex items-start gap-3 group">
@@ -206,7 +234,7 @@ const Footer = () => {
                     <Phone size={18} className="text-orange-600" />
                   </div>
                   <a
-                    href="tel:+919666523199"
+                    href="tel:+917799350934"
                     className="text-gray-600 group-hover:text-orange-600 transition-colors text-sm"
                   >
                     +91 7799350934
@@ -217,7 +245,7 @@ const Footer = () => {
                     <Mail size={18} className="text-blue-600" />
                   </div>
                   <a
-                    href="mailto:Info@bigclasses.ai"
+                    href="mailto:lyntradata@gmail.com"
                     className="text-gray-600 group-hover:text-blue-600 transition-colors text-sm break-all"
                   >
                     lyntradata@gmail.com
@@ -246,24 +274,27 @@ const Footer = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onKeyPress={handleKeyPress}
                 placeholder="Enter your email address"
                 className="flex-1 px-4 py-3 border-2 border-transparent rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:border-white transition-all shadow-lg text-sm"
                 style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(10px)' }}
+                disabled={isLoading}
               />
               <button
                 onClick={handleSubscribe}
-                className="bg-white text-blue-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-50 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 whitespace-nowrap text-sm"
+                disabled={isLoading}
+                className="bg-white text-blue-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-50 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 whitespace-nowrap text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{ transform: 'scale(1)' }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                onMouseEnter={(e) => !isLoading && (e.currentTarget.style.transform = 'scale(1.05)')}
                 onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
               >
-                Subscribe
+                {isLoading ? "Subscribing..." : "Subscribe"}
                 <Send size={16} />
               </button>
             </div>
             {subscribeStatus === "success" && (
               <p className="text-green-300 mt-3 font-medium text-sm">
-                ✓ Successfully subscribed! Check your inbox.
+                ✓ Successfully subscribed! Check your inbox for confirmation.
               </p>
             )}
             {subscribeStatus === "error" && (

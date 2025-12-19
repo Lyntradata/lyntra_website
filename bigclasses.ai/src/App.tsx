@@ -12,7 +12,6 @@ import CourseDetails from "@/pages/CourseDetails";
 import FeatureDetail from "./components/home/FeatureDetail";
 import FeatureOverview from "./components/home/FeatureOverview";
 
-
 // Blog pages removed
 
 

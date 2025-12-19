@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Layers, Headphones, Briefcase, RefreshCw, Sparkles } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import PlacementAssistance from "@/components/home/PlacementAssistance";
+import CTASection from "@/components/home/CTASection";
 import Footer from "@/components/layout/Footer";
 
 // Define the feature data structure
@@ -252,6 +253,7 @@ const FeatureOverview = () => {
       </div>
 
       <PlacementAssistance />
+      <CTASection/>
       <Footer />
     </div>
   );
