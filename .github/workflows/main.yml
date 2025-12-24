@@ -1,9 +1,9 @@
-name: Deploy to stage
+name: Deploy to prod
 
 on:
   push:
     branches:
-      - stage
+      - prod
 
 jobs:
   deploy:
@@ -18,11 +18,11 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          cd /home/ubuntu/stage
+          cd /home/ubuntu/prod
           sudo rm -rf lyntra_website
           git clone https://github.com/Lyntradata/lyntra_website.git
-          cd /home/ubuntu/stage/lyntra_website
-          git checkout stage
-          git pull origin stage
+          cd /home/ubuntu/prod/lyntra_website
+          git checkout prod
+          git pull origin prod
           chmod +x deploy.sh
           ./deploy.sh
