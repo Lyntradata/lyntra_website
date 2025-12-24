@@ -18,7 +18,7 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          cd /home/ubuntu/satge
+          cd /home/ubuntu/stage
           sudo rm -rf lyntra_website
           git clone https://github.com/Lyntradata/lyntra_website.git
           cd /home/ubuntu/stage/lyntra_website
