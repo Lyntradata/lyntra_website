@@ -4,7 +4,7 @@ import Footer from "@/components/layout/Footer";
 import HeroSection from "@/components/home/HeroSection";
 import FeaturesSection from "@/components/home/FeaturesSection";
 import CoursesSection from "@/components/home/CoursesSection";
-import Leadership from "@/components/home/leadership";  // ← Capital L
+import Leadership from "@/components/home/Leadership";  // ← Capital L
 import CTASection from "@/components/home/CTASection";
 import Welcome from "@/components/home/welcome";
 import PlacementAssistance from "@/components/home/PlacementAssistance";
