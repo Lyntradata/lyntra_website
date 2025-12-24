@@ -37,16 +37,16 @@ class Course(models.Model):
     rating = models.FloatField()
     modules_count = models.PositiveIntegerField()
     
-    # New field for curriculum file (any type)
+    # Curriculum file field - supports PDF, DOC, DOCX, PPT, PPTX, etc.
     curriculum_file = models.FileField(
         upload_to=curriculum_file_path,
         validators=[validate_curriculum_file],
         blank=True,
         null=True,
-        help_text="Upload curriculum file (PDF, DOC, PPT, etc. - max 50MB)"
+        help_text="Upload curriculum file (PDF, DOC, PPT, etc. - max 50MB). This will be sent as email attachment."
     )
     
-    # Optional: Track when file was uploaded
+    # Track when file was uploaded
     file_uploaded_at = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
@@ -58,9 +58,19 @@ class Course(models.Model):
             self.slug = f"{slugify(self.title)}-{timestamp}"
         
         # Update file uploaded timestamp if file is being added/changed
-        if self.curriculum_file and not self.file_uploaded_at:
-            self.file_uploaded_at = timezone.now()
-        elif not self.curriculum_file:
+        if self.curriculum_file:
+            # Check if this is a new file or file has changed
+            if not self.pk or not self.file_uploaded_at:
+                self.file_uploaded_at = timezone.now()
+            else:
+                # Check if file has changed
+                try:
+                    old_instance = Course.objects.get(pk=self.pk)
+                    if old_instance.curriculum_file != self.curriculum_file:
+                        self.file_uploaded_at = timezone.now()
+                except Course.DoesNotExist:
+                    self.file_uploaded_at = timezone.now()
+        else:
             self.file_uploaded_at = None
             
         super().save(*args, **kwargs)
@@ -71,17 +81,32 @@ class Course(models.Model):
         return bool(self.curriculum_file)
 
     def get_curriculum_filename(self):
-        """Get the original filename for download"""
+        """Get the formatted filename for download/email attachment"""
         if self.curriculum_file:
-            original_name = os.path.basename(self.curriculum_file.name)
-            name, ext = os.path.splitext(original_name)
+            # Get original extension
+            _, ext = os.path.splitext(self.curriculum_file.name)
+            # Return clean filename with course title
             return f"{self.title}_Curriculum{ext}"
-        return None
+        return "Curriculum.pdf"  # Default fallback
     
     def get_file_extension(self):
         """Get file extension for frontend handling"""
         if self.curriculum_file:
             return os.path.splitext(self.curriculum_file.name)[1].lower()
+        return None
+    
+    def get_file_size_display(self):
+        """Get human-readable file size"""
+        if self.curriculum_file:
+            size_bytes = self.curriculum_file.size
+            if size_bytes == 0:
+                return "0 B"
+            size_names = ["B", "KB", "MB", "GB"]
+            import math
+            i = int(math.floor(math.log(size_bytes, 1024)))
+            p = math.pow(1024, i)
+            s = round(size_bytes / p, 2)
+            return f"{s} {size_names[i]}"
         return None
 
 class BatchSchedule(models.Model):

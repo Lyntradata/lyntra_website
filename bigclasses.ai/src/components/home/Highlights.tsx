@@ -175,22 +175,10 @@ const Highlights: React.FC = () => {
 
     setIsSubmitting(true);
     try {
-      const hasDownloaded = localStorage.getItem(`curriculum_downloaded_${id}`);
-      if (hasDownloaded) {
-        toast({
-          title: "Already Downloaded",
-          description: "You have already downloaded this curriculum.",
-          variant: "destructive",
-        });
-        setIsSubmitting(false);
-        return;
-      }
-
+      // ✅ REMOVED THE LOCALSTORAGE CHECK - NOW ALLOWS UNLIMITED DOWNLOADS
       const response = await axiosInstance.post(`/courses/${id}/enroll-download/`, formData);
 
       if (response.data.success) {
-        localStorage.setItem(`curriculum_downloaded_${id}`, 'true');
-        
         setEnrollmentSuccess(true);
         setShowSuccessMessage(true);
 

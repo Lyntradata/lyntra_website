@@ -295,35 +295,42 @@ Please follow up with the student.
 class CurriculumDownloadView(APIView):
     """
     API endpoint for downloading curriculum files
+    UNLIMITED DOWNLOADS: Users can download as many times as they want
     """
     def get(self, request, slug):
         email = request.GET.get('email')
         if not email:
             return Response({"error": "Email required"}, status=400)
-        from enrollments.models import Enrollment
+        
+        # Check if enrollment exists and is verified
         if not Enrollment.objects.filter(email=email, course__slug=slug, is_verified=True).exists():
             return Response({"error": "Email not verified"}, status=403)
 
         try:
             course = get_object_or_404(Course, slug=slug)
+            
             if not course.curriculum_file:
                 logger.warning(f"No curriculum file found for course {slug}")
                 return Response(
                     {"error": "No curriculum file available for this course"},
                     status=status.HTTP_404_NOT_FOUND
                 )
+            
             if not course.curriculum_file.storage.exists(course.curriculum_file.name):
                 logger.error(f"Curriculum file not found on disk for course {slug}")
                 return Response(
                     {"error": "Curriculum file not found"},
                     status=status.HTTP_404_NOT_FOUND
                 )
+            
             file_path = course.curriculum_file.path
             file_name = course.get_curriculum_filename()
             content_type, _ = mimetypes.guess_type(file_path)
             if not content_type:
                 content_type = 'application/octet-stream'
-            logger.info(f"Downloading curriculum file for course {slug}: {file_name}")
+            
+            logger.info(f"User {email} downloading curriculum for course {slug} (unlimited downloads allowed)")
+            
             try:
                 response = FileResponse(
                     open(file_path, 'rb'),
@@ -340,6 +347,7 @@ class CurriculumDownloadView(APIView):
                     {"error": "Error reading curriculum file"},
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 )
+                
         except Course.DoesNotExist:
             logger.error(f"Course with slug {slug} not found for download")
             return Response(
@@ -360,11 +368,13 @@ class CurriculumInfoView(APIView):
     def get(self, request, slug):
         try:
             course = get_object_or_404(Course, slug=slug)
+            
             if not course.curriculum_file:
                 return Response({
                     "has_file": False,
                     "message": "No curriculum file available"
                 })
+            
             file_size = course.curriculum_file.size
             file_name = course.get_curriculum_filename()
             file_extension = course.get_file_extension()

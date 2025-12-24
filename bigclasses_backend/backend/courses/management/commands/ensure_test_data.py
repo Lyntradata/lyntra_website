@@ -32,7 +32,7 @@ class Command(BaseCommand):
                     'package': "12.5",
                     'hike': "150",
                     'transitions': "500",
-                    'image': "https://grras.com/files/hiclvxrtdz6derhkzc6a/python%20(1).png",
+                    'image': "https://thebite.org/wp-content/uploads/2025/04/Python-1200x1200.webp",
 
 
                     'highlights': [
